@@ -1,0 +1,426 @@
+app-root) (app-root) ssh workstation; exit
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ED25519 key sent by the remote host is
+SHA256:2vjSbnsKdBKI4rPjYoQhWTBdKr7qe7aEy1DyGE1P5xU.
+Please contact your system administrator.
+Add correct host key in /home/student/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /home/student/.ssh/known_hosts:4
+Password authentication is disabled to avoid man-in-the-middle attacks.
+Keyboard-interactive authentication is disabled to avoid man-in-the-middle attacks.
+UpdateHostkeys is disabled because the host key is not trusted.
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Register this system with Red Hat Insights: insights-client --register
+Create an account or view all your systems at https://red.ht/insights-dashboard
+Last login: Mon Mar  3 09:05:55 2025 from 10.88.0.2
+[student@workstation ~]$ oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+Login successful.
+
+You have access to 72 projects, the list has been suppressed. You can list all projects with 'oc projects'
+
+Using project "kube-system".
+[student@workstation ~]$ oc get nodes 
+NAME       STATUS   ROLES                         AGE    VERSION
+master01   Ready    control-plane,master,worker   405d   v1.27.6+f67aeb3
+[student@workstation ~]$ kubectl create deployment db-pod --port 3306 \
+  --image registry.ocp4.example.com:8443/rhel8/mysql-80
+deployment.apps/db-pod created
+[student@workstation ~]$ oc get pods 
+NAME                      READY   STATUS                   RESTARTS     AGE
+db-pod-76486b9446-2hgdq   0/1     CrashLoopBackOff         1 (5s ago)   8s
+master01-debug-r474d      0/1     ContainerStatusUnknown   1            37m
+[student@workstation ~]$ kubectl delete deployment db-pod-76486b9446-2hgdq
+Error from server (NotFound): deployments.apps "db-pod-76486b9446-2hgdq" not found
+[student@workstation ~]$ oc get pods 
+NAME                      READY   STATUS                   RESTARTS      AGE
+db-pod-76486b9446-2hgdq   0/1     CrashLoopBackOff         2 (16s ago)   33s
+master01-debug-r474d      0/1     ContainerStatusUnknown   1             37m
+[student@workstation ~]$ kubectl delete deployment  pod db-pod-76486b9446-2hgdq
+Error from server (NotFound): deployments.apps "pod" not found
+Error from server (NotFound): deployments.apps "db-pod-76486b9446-2hgdq" not found
+[student@workstation ~]$ kubectl delete deployment   db-pod-76486b9446-2hgdq
+Error from server (NotFound): deployments.apps "db-pod-76486b9446-2hgdq" not found
+[student@workstation ~]$ oc get deployment 
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+db-pod   0/1     1            0           66s
+[student@workstation ~]$ oc delete deployment db-pod 
+deployment.apps "db-pod" deleted
+[student@workstation ~]$ oc new-project vikas
+Now using project "vikas" on server "https://api.ocp4.example.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app rails-postgresql-example
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.43 -- /agnhost serve-hostname
+
+[student@workstation ~]$ oc project vikas
+Already on project "vikas" on server "https://api.ocp4.example.com:6443".
+[student@workstation ~]$ oc get pods 
+No resources found in vikas namespace.
+[student@workstation ~]$  kubectl create deployment db-pod --port 3306 \
+  --image registry.ocp4.example.com:8443/rhel8/mysql-80
+deployment.apps/db-pod created
+[student@workstation ~]$ kubectl set env deployment/db-pod \
+  MYSQL_USER='user1' \
+  MYSQL_PASSWORD='mypa55w0rd' \
+  MYSQL_DATABASE='items'
+deployment.apps/db-pod env updated
+[student@workstation ~]$ oc get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+db-pod-ddf6fd4b6-b6h6q   1/1     Running   0          3s
+[student@workstation ~]$ oc logs db-pod-ddf6fd4b6-b6h6q
+=> sourcing 20-validate-variables.sh ...
+=> sourcing 25-validate-replication-variables.sh ...
+=> sourcing 30-base-config.sh ...
+---> 14:20:20     Processing basic MySQL configuration files ...
+=> sourcing 60-replication-config.sh ...
+=> sourcing 70-s2i-config.sh ...
+---> 14:20:20     Processing additional arbitrary  MySQL configuration provided by s2i ...
+=> sourcing 20-default-authentication-plugin.cnf ...
+=> sourcing 40-paas.cnf ...
+=> sourcing 50-my-tuning.cnf ...
+---> 14:20:20     Initializing database ...
+---> 14:20:20     Running /usr/libexec/mysqld --initialize --datadir=/var/lib/mysql/data
+---> 14:20:26     Starting MySQL server with disabled networking ...
+---> 14:20:26     Waiting for MySQL to start ...
+2025-03-03T14:20:26.271393Z 0 [Warning] [MY-011070] [Server] 'Disabling symbolic links using --skip-symbolic-links (or equivalent) is the default. Consider not using this option as it' is deprecated and will be removed in a future release.
+2025-03-03T14:20:26.274979Z 0 [System] [MY-010116] [Server] /usr/libexec/mysqld (mysqld 8.0.32) starting as process 80
+2025-03-03T14:20:26.291607Z 0 [Warning] [MY-013907] [InnoDB] Deprecated configuration parameters innodb_log_file_size and/or innodb_log_files_in_group have been used to compute innodb_redo_log_capacity=16777216. Please use innodb_redo_log_capacity instead.
+2025-03-03T14:20:26.294419Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2025-03-03T14:20:26.500182Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2025-03-03T14:20:26.839843Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2025-03-03T14:20:26.839885Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2025-03-03T14:20:26.869102Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: /var/lib/mysql/mysqlx.sock
+2025-03-03T14:20:26.869271Z 0 [System] [MY-010931] [Server] /usr/libexec/mysqld: ready for connections. Version: '8.0.32'  socket: '/tmp/mysql.sock'  port: 0  Source distribution.
+---> 14:20:27     MySQL started successfully
+mysql: [Warning] Using a password on the command line interface can be insecure.
+The mysql_upgrade client is now deprecated. The actions executed by the upgrade client are now done by the server.
+To upgrade, please start the new MySQL binary with the older data directory. Repairing user tables is done automatically. Restart is not required after upgrade.
+The upgrade process automatically starts on running a new MySQL binary with an older data directory. To avoid accidental upgrades, please use the --upgrade=NONE option with the MySQL binary. The option --upgrade=FORCE is also provided to run the server upgrade sequence on demand.
+It may be possible that the server upgrade fails due to a number of reasons. In that case, the upgrade sequence will run again during the next MySQL server start. If the server upgrade fails repeatedly, the server can be started with the --upgrade=MINIMAL option to start the server without executing the upgrade sequence, thus allowing users to manually rectify the problem.
+---> 14:20:27     Creating user specified by MYSQL_USER (user1) ...
+---> 14:20:27     Creating database items ...
+---> 14:20:27     Granting privileges to user user1 for items ...
+---> 14:20:27     Initialization finished
+=> sourcing 40-datadir-action.sh ...
+---> 14:20:27     Running datadir action: upgrade-warn
+---> 14:20:27     Warning: Version of the data could not be determined. It is because the file mysql_upgrade_info is missing in the data directory, which is most probably because it was not created when initialization of data directory. In order to allow seamless updates to the next higher version in the future, the file mysql_upgrade_info will be created. If the data directory was created with a different version than 8.0, it is required to run this container with the MYSQL_DATADIR_ACTION environment variable set to 'force', or run 'mysql_upgrade' utility manually; the mysql_upgrade tool checks the tables and creates such a file as well. For upstream documentation about upgrading, see: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html
+---> 14:20:27     Storing version '8.0.32' information into the data dir '/var/lib/mysql/data/mysql_upgrade_info'
+=> sourcing 50-passwd-change.sh ...
+---> 14:20:27     Setting passwords ...
+---> 14:20:27     Shutting down MySQL ...
+2025-03-03T14:20:27.340374Z 16 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 8.0.32).
+2025-03-03T14:20:28.323202Z 0 [System] [MY-010910] [Server] /usr/libexec/mysqld: Shutdown complete (mysqld 8.0.32)  Source distribution.
+---> 14:20:28     Cleaning up environment variables MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE and MYSQL_ROOT_PASSWORD ...
+---> 14:20:28     Running final exec -- Only MySQL server logs after this point
+2025-03-03T14:20:28.648027Z 0 [Warning] [MY-011070] [Server] 'Disabling symbolic links using --skip-symbolic-links (or equivalent) is the default. Consider not using this option as it' is deprecated and will be removed in a future release.
+2025-03-03T14:20:28.650122Z 0 [System] [MY-010116] [Server] /usr/libexec/mysqld (mysqld 8.0.32) starting as process 1
+2025-03-03T14:20:28.656639Z 0 [Warning] [MY-013907] [InnoDB] Deprecated configuration parameters innodb_log_file_size and/or innodb_log_files_in_group have been used to compute innodb_redo_log_capacity=16777216. Please use innodb_redo_log_capacity instead.
+2025-03-03T14:20:28.658561Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2025-03-03T14:20:28.789835Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2025-03-03T14:20:29.340203Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2025-03-03T14:20:29.340242Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2025-03-03T14:20:29.367467Z 0 [System] [MY-010931] [Server] /usr/libexec/mysqld: ready for connections. Version: '8.0.32'  socket: '/var/lib/mysql/mysql.sock'  port: 3306  Source distribution.
+2025-03-03T14:20:29.367459Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/lib/mysql/mysqlx.sock
+[student@workstation ~]$  kubectl create deployment hello-openshift -o yaml \
+  --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 \
+  --save-config \ 1
+  --dry-run=client \ 2
+  > ~/my-app/example-deployment.yaml
+error: exactly one NAME is required, got 2
+See 'kubectl create deployment -h' for help and examples
+bash: --dry-run=client: command not found...
+Failed to search for file: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Could not activate remote peer.
+-bash: /home/student/my-app/example-deployment.yaml: No such file or directory
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml \
+  --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 \
+  --save-config \ 1
+  --dry-run=client \ 2
+error: exactly one NAME is required, got 2
+See 'kubectl create deployment -h' for help and examples
+bash: --dry-run=client: command not found...
+Failed to search for file: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Could not activate remote peer.
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml \
+  --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 \
+  --save-config \ 
+  --dry-run=client \ 
+error: exactly one NAME is required, got 2
+See 'kubectl create deployment -h' for help and examples
+bash: --dry-run=client: command not found...
+Failed to search for file: GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Could not activate remote peer.
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml   --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 --save-config --dry-run=client 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"kind":"Deployment","apiVersion":"apps/v1","metadata":{"name":"hello-openshift","creationTimestamp":null,"labels":{"app":"hello-openshift"}},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"hello-openshift"}},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"hello-openshift"}},"spec":{"containers":[{"name":"hello-world-nginx","image":"registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0","resources":{}}]}},"strategy":{}},"status":{}}
+  creationTimestamp: null
+  labels:
+    app: hello-openshift
+  name: hello-openshift
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-openshift
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: hello-openshift
+    spec:
+      containers:
+      - image: registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0
+        name: hello-world-nginx
+        resources: {}
+status: {}
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml   --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0  --dry-run=client 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: hello-openshift
+  name: hello-openshift
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-openshift
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: hello-openshift
+    spec:
+      containers:
+      - image: registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0
+        name: hello-world-nginx
+        resources: {}
+status: {}
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml   --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0  --dry-run=server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: "2025-03-03T14:26:19Z"
+  generation: 1
+  labels:
+    app: hello-openshift
+  name: hello-openshift
+  namespace: vikas
+  uid: 7fbcb967-66b5-4b80-b5a5-1c70a5e04973
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: hello-openshift
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: hello-openshift
+    spec:
+      containers:
+      - image: registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0
+        imagePullPolicy: IfNotPresent
+        name: hello-world-nginx
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml   --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 --save-config --dry-run=client >save.yaml
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml   --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 --save-config --dry-run=client >client.yaml
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml   --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 --save-config --dry-run=server >client.yaml
+[student@workstation ~]$ ls
+DO280    Documents  Music     Public     Untitled.ipynb   Videos       save.yaml
+Desktop  Downloads  Pictures  Templates  Untitled1.ipynb  client.yaml
+[student@workstation ~]$ ls -lrth 
+total 16K
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Videos
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Templates
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Public
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Pictures
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Music
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Downloads
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Documents
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Desktop
+-rw-r--r--. 1 student student   72 Mar  3 07:49 Untitled.ipynb
+drwxr-xr-x. 4 student student   35 Mar  3 08:01 DO280
+-rw-r--r--. 1 student student   72 Mar  3 09:06 Untitled1.ipynb
+-rw-r--r--. 1 student student 1.1K Mar  3 09:27 save.yaml
+-rw-r--r--. 1 student student 1.6K Mar  3 09:27 client.yaml
+[student@workstation ~]$ kubectl create deployment hello-openshift -o yaml   --image registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0 --save-config --dry-run=server >server.yaml
+[student@workstation ~]$ ls -ltotal 20
+drwxr-xr-x. 4 student student   35 Mar  3 08:01 DO280
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Desktop
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Documents
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Downloads
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Music
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Pictures
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Public
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Templates
+-rw-r--r--. 1 student student   72 Mar  3 07:49 Untitled.ipynb
+-rw-r--r--. 1 student student   72 Mar  3 09:06 Untitled1.ipynb
+drwxr-xr-x. 2 student student    6 Jan 23  2024 Videos
+-rw-r--r--. 1 student student 1587 Mar  3 09:27 client.yaml
+-rw-r--r--. 1 student student 1053 Mar  3 09:27 save.yaml
+-rw-r--r--. 1 student student 1587 Mar  3 09:27 server.yaml
+[student@workstation ~]$ cat client.yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"kind":"Deployment","apiVersion":"apps/v1","metadata":{"name":"hello-openshift","creationTimestamp":null,"labels":{"app":"hello-openshift"}},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"hello-openshift"}},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"hello-openshift"}},"spec":{"containers":[{"name":"hello-world-nginx","image":"registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0","resources":{}}]}},"strategy":{}},"status":{}}
+  creationTimestamp: "2025-03-03T14:27:41Z"
+  generation: 1
+  labels:
+    app: hello-openshift
+  name: hello-openshift
+  namespace: vikas
+  uid: cb2e4280-bb41-4a63-b8e9-09b6137d79d3
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: hello-openshift
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: hello-openshift
+    spec:
+      containers:
+      - image: registry.ocp4.example.com:8443/redhattraining/hello-world-nginx:v1.0
+        imagePullPolicy: IfNotPresent
+        name: hello-world-nginx
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
+[student@workstation ~]$ sdiff client.yaml server.yaml 
+apiVersion: apps/v1                                             apiVersion: apps/v1
+kind: Deployment                                                kind: Deployment
+metadata:                                                       metadata:
+  annotations:                                                    annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |             kubectl.kubernetes.io/last-applied-configuration: |
+      {"kind":"Deployment","apiVersion":"apps/v1","metadata":         {"kind":"Deployment","apiVersion":"apps/v1","metadata":
+  creationTimestamp: "2025-03-03T14:27:41Z"                   |   creationTimestamp: "2025-03-03T14:27:58Z"
+  generation: 1                                                   generation: 1
+  labels:                                                         labels:
+    app: hello-openshift                                            app: hello-openshift
+  name: hello-openshift                                           name: hello-openshift
+  namespace: vikas                                                namespace: vikas
+  uid: cb2e4280-bb41-4a63-b8e9-09b6137d79d3                   |   uid: 3e2f1ccb-875a-4f6a-aa9e-3ef0ad27d3bb
+spec:                                                           spec:
+  progressDeadlineSeconds: 600                                    progressDeadlineSeconds: 600
+  replicas: 1                                                     replicas: 1
+  revisionHistoryLimit: 10                                        revisionHistoryLimit: 10
+  selector:                                                       selector:
+    matchLabels:                                                    matchLabels:
+      app: hello-openshift                                            app: hello-openshift
+  strategy:                                                       strategy:
+    rollingUpdate:                                                  rollingUpdate:
+      maxSurge: 25%                                                   maxSurge: 25%
+      maxUnavailable: 25%                                             maxUnavailable: 25%
+    type: RollingUpdate                                             type: RollingUpdate
+  template:                                                       template:
+    metadata:                                                       metadata:
+      creationTimestamp: null                                         creationTimestamp: null
+      labels:                                                         labels:
+        app: hello-openshift                                            app: hello-openshift
+    spec:                                                           spec:
+      containers:                                                     containers:
+      - image: registry.ocp4.example.com:8443/redhattraining/         - image: registry.ocp4.example.com:8443/redhattraining/
+        imagePullPolicy: IfNotPresent                                   imagePullPolicy: IfNotPresent
+        name: hello-world-nginx                                         name: hello-world-nginx
+        resources: {}                                                   resources: {}
+        terminationMessagePath: /dev/termination-log                    terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File                                  terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst                                         dnsPolicy: ClusterFirst
+      restartPolicy: Always                                           restartPolicy: Always
+      schedulerName: default-scheduler                                schedulerName: default-scheduler
+      securityContext: {}                                             securityContext: {}
+      terminationGracePeriodSeconds: 30                               terminationGracePeriodSeconds: 30
+status: {}                                                      status: {}
+[student@workstation ~]$ sdiff client.yaml save.yaml 
+apiVersion: apps/v1                                             apiVersion: apps/v1
+kind: Deployment                                                kind: Deployment
+metadata:                                                       metadata:
+  annotations:                                                    annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |             kubectl.kubernetes.io/last-applied-configuration: |
+      {"kind":"Deployment","apiVersion":"apps/v1","metadata":         {"kind":"Deployment","apiVersion":"apps/v1","metadata":
+  creationTimestamp: "2025-03-03T14:27:41Z"                   |   creationTimestamp: null
+  generation: 1                                               <
+  labels:                                                         labels:
+    app: hello-openshift                                            app: hello-openshift
+  name: hello-openshift                                           name: hello-openshift
+  namespace: vikas                                            <
+  uid: cb2e4280-bb41-4a63-b8e9-09b6137d79d3                   <
+spec:                                                           spec:
+  progressDeadlineSeconds: 600                                <
+  replicas: 1                                                     replicas: 1
+  revisionHistoryLimit: 10                                    <
+  selector:                                                       selector:
+    matchLabels:                                                    matchLabels:
+      app: hello-openshift                                            app: hello-openshift
+  strategy:                                                   |   strategy: {}
+    rollingUpdate:                                            <
+      maxSurge: 25%                                           <
+      maxUnavailable: 25%                                     <
+    type: RollingUpdate                                       <
+  template:                                                       template:
+    metadata:                                                       metadata:
+      creationTimestamp: null                                         creationTimestamp: null
+      labels:                                                         labels:
+        app: hello-openshift                                            app: hello-openshift
+    spec:                                                           spec:
+      containers:                                                     containers:
+      - image: registry.ocp4.example.com:8443/redhattraining/         - image: registry.ocp4.example.com:8443/redhattraining/
+        imagePullPolicy: IfNotPresent                         <
+        name: hello-world-nginx                                         name: hello-world-nginx
+        resources: {}                                                   resources: {}
+        terminationMessagePath: /dev/termination-log          <
+        terminationMessagePolicy: File                        <
+      dnsPolicy: ClusterFirst                                 <
+      restartPolicy: Always                                   <
+      schedulerName: default-scheduler                        <
+      securityContext: {}                                     <
+      terminationGracePeriodSeconds: 30                       <
+status: {}                                                      status: {}
+[student@workstation ~]$ 
