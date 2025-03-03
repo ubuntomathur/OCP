@@ -424,3 +424,474 @@ spec:                                                           spec:
       terminationGracePeriodSeconds: 30                       <
 status: {}                                                      status: {}
 [student@workstation ~]$ 
+===========================================================================================================================================================================
+
+
+
+
+
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$ 
+[student@workstation ~]$  lab start declarative-manifests
+SUCCESS Waiting for cluster
+SUCCESS Remove declarative-manifests project
+SUCCESS Copy exercise files
+SUCCESS Create git repository
+SUCCESS Prepare git repository
+[student@workstation ~]$ ls 
+DO280    Documents  Music     Public     Untitled.ipynb   Videos       save.yaml
+Desktop  Downloads  Pictures  Templates  Untitled1.ipynb  client.yaml  server.yaml
+[student@workstation ~]$ oc login -u developer -p developer \
+  https://api.ocp4.example.com:6443
+Login successful.
+
+You don't have any projects. You can try to create a new project, by running
+
+    oc new-project <projectname>
+
+[student@workstation ~]$ oc new-project declarative-manifests
+Now using project "declarative-manifests" on server "https://api.ocp4.example.com:6443".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app rails-postgresql-example
+
+to build a new example application in Ruby. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=registry.k8s.io/e2e-test-images/agnhost:2.43 -- /agnhost serve-hostname
+
+[student@workstation ~]$ oc get pods 
+No resources found in declarative-manifests namespace.
+[student@workstation ~]$ cd ~/DO280/labs
+[student@workstation labs]$ ll
+total 0
+drwxr-xr-x. 3 student student 35 Mar  3 08:06 declarative-manifests
+[student@workstation labs]$ git clone \
+  https://git.ocp4.example.com/developer/declarative-manifests.git
+fatal: destination path 'declarative-manifests' already exists and is not an empty directory.
+[student@workstation labs]$ ls 
+declarative-manifests
+[student@workstation labs]$ cd declarative-manifests/
+[student@workstation declarative-manifests]$ ll
+total 0
+drwxr-xr-x. 3 student student 104 Mar  3 08:15 declarative-manifests
+[student@workstation declarative-manifests]$ cd declarative-manifests/ll
+-bash: cd: declarative-manifests/ll: No such file or directory
+[student@workstation declarative-manifests]$ cd declarative-manifests/
+[student@workstation declarative-manifests]$ ll
+total 12
+-rw-r--r--. 1 student student   11 Mar  3 08:06 README.md
+-rw-r--r--. 1 student student 3443 Mar  3 08:06 database.yaml
+-rw-r--r--. 1 student student 2278 Mar  3 08:06 exoplanets.yaml
+-rw-r--r--. 1 student student    0 Mar  3 08:15 o
+[student@workstation declarative-manifests]$  ls -lA
+total 12
+drwxr-xr-x. 8 student student  163 Mar  3 08:06 .git
+-rw-r--r--. 1 student student    0 Mar  3 08:06 .gitkeep
+-rw-r--r--. 1 student student   11 Mar  3 08:06 README.md
+-rw-r--r--. 1 student student 3443 Mar  3 08:06 database.yaml
+-rw-r--r--. 1 student student 2278 Mar  3 08:06 exoplanets.yaml
+-rw-r--r--. 1 student student    0 Mar  3 08:15 o
+[student@workstation declarative-manifests]$ git log --oneline
+78fb967 (HEAD -> main, tag: third, origin/v1.1.1, origin/main, origin/HEAD) Exoplanets v1.1.1
+c379f37 Database v1.1.1
+b77c910 (tag: second, origin/v1.1.0) Exoplanets v1.1.0
+b74d38c (tag: first, origin/v1.0) Exoplanets v1.0
+0edc11f Database v1.0
+1e8d1ed README
+79febf3 Initial commit
+[student@workstation declarative-manifests]$ git checkout v1.0
+branch 'v1.0' set up to track 'origin/v1.0'.
+Switched to a new branch 'v1.0'
+[student@workstation declarative-manifests]$ git status 
+On branch v1.0
+Your branch is up to date with 'origin/v1.0'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        o
+
+nothing added to commit but untracked files present (use "git add" to track)
+[student@workstation declarative-manifests]$ git log v1.0
+commit b74d38cb2eb723a10d382ffd1d22127014d78e97 (HEAD -> v1.0, tag: first, origin/v1.0)
+Author: Student User <student@workstation.lab.example.com>
+Date:   Mon Mar 3 08:01:23 2025 -0500
+
+    Exoplanets v1.0
+
+commit 0edc11ffc6fac9aecb552ec2f36692ce108a2054
+Author: Student User <student@workstation.lab.example.com>
+Date:   Mon Mar 3 08:01:23 2025 -0500
+
+    Database v1.0
+
+commit 1e8d1ed46e068ed837c47ae794f5afa3f0135ac4
+Author: Student User <student@workstation.lab.example.com>
+Date:   Mon Mar 3 08:01:23 2025 -0500
+
+    README
+
+commit 79febf35d726f4675235bbe17a9d560ef691587e
+Author: Student User <student@workstation.lab.example.com>
+Date:   Mon Mar 3 08:01:23 2025 -0500
+
+    Initial commit
+[student@workstation declarative-manifests]$ oc apply -f . \
+  --validate=true --dry-run=server
+configmap/database created (server dry run)
+secret/database created (server dry run)
+deployment.apps/database created (server dry run)
+service/database created (server dry run)
+configmap/exoplanets created (server dry run)
+secret/exoplanets created (server dry run)
+deployment.apps/exoplanets created (server dry run)
+service/exoplanets created (server dry run)
+route.route.openshift.io/exoplanets created (server dry run)
+[student@workstation declarative-manifests]$ oc apply -f .
+configmap/database created
+secret/database created
+deployment.apps/database created
+service/database created
+configmap/exoplanets created
+secret/exoplanets created
+deployment.apps/exoplanets created
+service/exoplanets created
+route.route.openshift.io/exoplanets created
+[student@workstation declarative-manifests]$  watch oc get deployments,pods
+[student@workstation declarative-manifests]$ ^C
+[student@workstation declarative-manifests]$ ^C
+[student@workstation declarative-manifests]$  oc get deployments,pods
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/database     1/1     1            1           73s
+deployment.apps/exoplanets   1/1     1            1           73s
+
+NAME                              READY   STATUS    RESTARTS      AGE
+pod/database-68b799596c-lptw2     1/1     Running   0             73s
+pod/exoplanets-857b9968c9-bs4nx   1/1     Running   3 (46s ago)   73s
+[student@workstation declarative-manifests]$ oc get routes
+NAME         HOST/PORT                                                PATH   SERVICES     PORT    TERMINATION   WILDCARD
+exoplanets   exoplanets-declarative-manifests.apps.ocp4.example.com          exoplanets   <all>                 None
+[student@workstation declarative-manifests]$ oc get routes -l 
+error: flag needs an argument: 'l' in -l
+See 'oc get --help' for usage.
+[student@workstation declarative-manifests]$ oc get routes -l app=exoplanets
+NAME         HOST/PORT                                                PATH   SERVICES     PORT    TERMINATION   WILDCARD
+exoplanets   exoplanets-declarative-manifests.apps.ocp4.example.com          exoplanets   <all>                 None
+[student@workstation declarative-manifests]$ git checkout v1.1.0
+branch 'v1.1.0' set up to track 'origin/v1.1.0'.
+Switched to a new branch 'v1.1.0'
+[student@workstation declarative-manifests]$ oc diff -f .
+diff -u -N /tmp/LIVE-3144789821/apps.v1.Deployment.declarative-manifests.exoplanets /tmp/MERGED-990752118/apps.v1.Deployment.declarative-manifests.exoplanets
+--- /tmp/LIVE-3144789821/apps.v1.Deployment.declarative-manifests.exoplanets    2025-03-03 11:16:48.447071200 -0500
++++ /tmp/MERGED-990752118/apps.v1.Deployment.declarative-manifests.exoplanets   2025-03-03 11:16:48.449071226 -0500
+@@ -3,11 +3,12 @@
+ metadata:
+   annotations:
+     deployment.kubernetes.io/revision: "1"
++    description: Defines how to deploy the application server
+     kubectl.kubernetes.io/last-applied-configuration: |
+       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"template.alpha.openshift.io/wait-for-ready":"true"},"labels":{"app":"exoplanets"},"name":"exoplanets","namespace":"declarative-manifests"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"exoplanets"}},"strategy":{"type":"Recreate"},"template":{"metadata":{"labels":{"app":"exoplanets"},"name":"exoplanets"},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"exoplanets"}},{"secretRef":{"name":"exoplanets"}}],"image":"registry.ocp4.example.com:8443/redhattraining/exoplanets:v1.0","imagePullPolicy":"Always","livenessProbe":{"httpGet":{"path":"/healthz","port":8080},"initialDelaySeconds":20,"periodSeconds":30,"timeoutSeconds":3},"name":"exoplanets","ports":[{"containerPort":8080}],"readinessProbe":{"httpGet":{"path":"/healthz","port":8080},"initialDelaySeconds":3,"periodSeconds":10,"timeoutSeconds":3},"resources":{"limits":{"memory":"1Gi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}}]}}}}
+     template.alpha.openshift.io/wait-for-ready: "true"
+   creationTimestamp: "2025-03-03T16:06:36Z"
+-  generation: 1
++  generation: 2
+   labels:
+     app: exoplanets
+   name: exoplanets
+@@ -36,7 +37,7 @@
+             name: exoplanets
+         - secretRef:
+             name: exoplanets
+-        image: registry.ocp4.example.com:8443/redhattraining/exoplanets:v1.0
++        image: registry.ocp4.example.com:8443/redhattraining/exoplanets:v1.1.0
+         imagePullPolicy: Always
+         livenessProbe:
+           failureThreshold: 3
+[student@workstation declarative-manifests]$  oc apply -f .
+configmap/database unchanged
+secret/database configured
+deployment.apps/database configured
+service/database configured
+configmap/exoplanets unchanged
+secret/exoplanets configured
+deployment.apps/exoplanets configured
+service/exoplanets unchanged
+route.route.openshift.io/exoplanets configured
+[student@workstation declarative-manifests]$ watch oc get deployments,pods
+[student@workstation declarative-manifests]$  oc get deployments,pods
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/database     1/1     1            1           11m
+deployment.apps/exoplanets   1/1     1            1           11m
+
+NAME                              READY   STATUS    RESTARTS   AGE
+pod/database-68b799596c-lptw2     1/1     Running   0          11m
+pod/exoplanets-84755876cd-hsv2d   1/1     Running   0          38s
+[student@workstation declarative-manifests]$ oc get routes -l app=exoplanets
+NAME         HOST/PORT                                                PATH   SERVICES     PORT    TERMINATION   WILDCARD
+exoplanets   exoplanets-declarative-manifests.apps.ocp4.example.com          exoplanets   <all>                 None
+[student@workstation declarative-manifests]$  watch oc get deployments,pods
+[student@workstation declarative-manifests]$ git checkout v1.1.1
+branch 'v1.1.1' set up to track 'origin/v1.1.1'.
+Switched to a new branch 'v1.1.1'
+[student@workstation declarative-manifests]$  oc diff -f .
+diff -u -N /tmp/LIVE-890392962/apps.v1.Deployment.declarative-manifests.exoplanets /tmp/MERGED-136759921/apps.v1.Deployment.declarative-manifests.exoplanets
+--- /tmp/LIVE-890392962/apps.v1.Deployment.declarative-manifests.exoplanets     2025-03-03 11:20:00.999598220 -0500
++++ /tmp/MERGED-136759921/apps.v1.Deployment.declarative-manifests.exoplanets   2025-03-03 11:20:01.000598234 -0500
+@@ -8,7 +8,7 @@
+       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"description":"Defines how to deploy the application server","template.alpha.openshift.io/wait-for-ready":"true"},"labels":{"app":"exoplanets"},"name":"exoplanets","namespace":"declarative-manifests"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"exoplanets"}},"strategy":{"type":"Recreate"},"template":{"metadata":{"labels":{"app":"exoplanets"},"name":"exoplanets"},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"exoplanets"}},{"secretRef":{"name":"exoplanets"}}],"image":"registry.ocp4.example.com:8443/redhattraining/exoplanets:v1.1.0","imagePullPolicy":"Always","livenessProbe":{"httpGet":{"path":"/healthz","port":8080},"initialDelaySeconds":20,"periodSeconds":30,"timeoutSeconds":3},"name":"exoplanets","ports":[{"containerPort":8080}],"readinessProbe":{"httpGet":{"path":"/healthz","port":8080},"initialDelaySeconds":3,"periodSeconds":10,"timeoutSeconds":3},"resources":{"limits":{"memory":"1Gi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}}]}}}}
+     template.alpha.openshift.io/wait-for-ready: "true"
+   creationTimestamp: "2025-03-03T16:06:36Z"
+-  generation: 2
++  generation: 3
+   labels:
+     app: exoplanets
+   name: exoplanets
+@@ -37,7 +37,7 @@
+             name: exoplanets
+         - secretRef:
+             name: exoplanets
+-        image: registry.ocp4.example.com:8443/redhattraining/exoplanets:v1.1.0
++        image: registry.ocp4.example.com:8443/redhattraining/exoplanets:v1.1.1
+         imagePullPolicy: Always
+         livenessProbe:
+           failureThreshold: 3
+diff -u -N /tmp/LIVE-890392962/v1.Secret.declarative-manifests.database /tmp/MERGED-136759921/v1.Secret.declarative-manifests.database
+--- /tmp/LIVE-890392962/v1.Secret.declarative-manifests.database        2025-03-03 11:20:00.930597317 -0500
++++ /tmp/MERGED-136759921/v1.Secret.declarative-manifests.database      2025-03-03 11:20:00.930597317 -0500
+@@ -3,7 +3,7 @@
+   database-admin-password: '***'
+   database-name: '***'
+   database-password: '***'
+-  database-user: '*** (before)'
++  database-user: '*** (after)'
+ kind: Secret
+ metadata:
+   annotations:
+diff -u -N /tmp/LIVE-890392962/v1.Secret.declarative-manifests.exoplanets /tmp/MERGED-136759921/v1.Secret.declarative-manifests.exoplanets
+--- /tmp/LIVE-890392962/v1.Secret.declarative-manifests.exoplanets      2025-03-03 11:20:00.985598037 -0500
++++ /tmp/MERGED-136759921/v1.Secret.declarative-manifests.exoplanets    2025-03-03 11:20:00.985598037 -0500
+@@ -3,7 +3,7 @@
+   DB_ADMIN_PASSWORD: '***'
+   DB_NAME: '***'
+   DB_PASSWORD: '***'
+-  DB_USER: '*** (before)'
++  DB_USER: '*** (after)'
+ kind: Secret
+ metadata:
+   annotations:
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+database-68b799596c-lptw2     1/1     Running   0          13m
+exoplanets-84755876cd-hsv2d   1/1     Running   0          3m11s
+[student@workstation declarative-manifests]$ oc apply -f .
+configmap/database unchanged
+secret/database configured
+deployment.apps/database configured
+service/database configured
+configmap/exoplanets unchanged
+secret/exoplanets configured
+deployment.apps/exoplanets configured
+service/exoplanets unchanged
+route.route.openshift.io/exoplanets configured
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS      AGE
+database-68b799596c-lptw2     1/1     Running            0             14m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   1 (10s ago)   16s
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS      AGE
+database-68b799596c-lptw2     1/1     Running            0             14m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   2 (11s ago)   36s
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS      AGE
+database-68b799596c-lptw2     1/1     Running            0             14m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   2 (13s ago)   38s
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS      AGE
+database-68b799596c-lptw2     1/1     Running            0             14m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   2 (15s ago)   40s
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS      AGE
+database-68b799596c-lptw2     1/1     Running            0             14m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   2 (16s ago)   41s
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS      AGE
+database-68b799596c-lptw2     1/1     Running            0             15m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   2 (22s ago)   47s
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS      AGE
+database-68b799596c-lptw2     1/1     Running            0             15m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   2 (24s ago)   49s
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS     AGE
+database-68b799596c-lptw2     1/1     Running            0            16m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   4 (8s ago)   112s
+[student@workstation declarative-manifests]$ oc get pods
+NAME                          READY   STATUS             RESTARTS      AGE
+database-68b799596c-lptw2     1/1     Running            0             16m
+exoplanets-55c658855c-4nq5b   0/1     CrashLoopBackOff   4 (10s ago)   114s
+[student@workstation declarative-manifests]$ oc get deployments
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+database     1/1     1            1           16m
+exoplanets   0/1     1            0           16m
+[student@workstation declarative-manifests]$ oc rollout restart  
+  deployment/database
+error: required resource not specified
+-bash: deployment/database: No such file or directory
+[student@workstation declarative-manifests]$ oc rollout restart \
+  deployment/database
+deployment.apps/database restarted
+[student@workstation declarative-manifests]$ oc get deployments
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+database     0/1     1            0           17m
+exoplanets   0/1     1            0           17m
+[student@workstation declarative-manifests]$ oc rollout restart \
+  deployment/exoplanets
+deployment.apps/exoplanets restarted
+[student@workstation declarative-manifests]$ oc get deployments
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+database     1/1     1            1           17m
+exoplanets   0/1     1            0           17m
+[student@workstation declarative-manifests]$ oc get deployments
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+database     1/1     1            1           17m
+exoplanets   0/1     1            0           17m
+[student@workstation declarative-manifests]$ oc get deployments
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+database     1/1     1            1           17m
+exoplanets   1/1     1            1           17m
+[student@workstation declarative-manifests]$  oc get deployment \
+  exoplanets -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "4"
+    description: Defines how to deploy the application server
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"description":"Defines how to deploy the application server","template.alpha.openshift.io/wait-for-ready":"true"},"labels":{"app":"exoplanets"},"name":"exoplanets","namespace":"declarative-manifests"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"exoplanets"}},"strategy":{"type":"Recreate"},"template":{"metadata":{"labels":{"app":"exoplanets"},"name":"exoplanets"},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"exoplanets"}},{"secretRef":{"name":"exoplanets"}}],"image":"registry.ocp4.example.com:8443/redhattraining/exoplanets:v1.1.1","imagePullPolicy":"Always","livenessProbe":{"httpGet":{"path":"/healthz","port":8080},"initialDelaySeconds":20,"periodSeconds":30,"timeoutSeconds":3},"name":"exoplanets","ports":[{"containerPort":8080}],"readinessProbe":{"httpGet":{"path":"/healthz","port":8080},"initialDelaySeconds":3,"periodSeconds":10,"timeoutSeconds":3},"resources":{"limits":{"memory":"1Gi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"runAsNonRoot":true,"seccompProfile":{"type":"RuntimeDefault"}}}]}}}}
+    template.alpha.openshift.io/wait-for-ready: "true"
+  creationTimestamp: "2025-03-03T16:06:36Z"
+  generation: 4
+  labels:
+    app: exoplanets
+  name: exoplanets
+  namespace: declarative-manifests
+  resourceVersion: "154938"
+  uid: 9dc15599-7957-4eb7-80b4-28081741a22f
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: exoplanets
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2025-03-03T11:24:10-05:00"
+      creationTimestamp: null
+      labels:
+        app: exoplanets
+      name: exoplanets
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: exoplanets
+        - secretRef:
+            name: exoplanets
+        image: registry.ocp4.example.com:8443/redhattraining/exoplanets:v1.1.1
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 3
+        name: exoplanets
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 3
+        resources:
+          limits:
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2025-03-03T16:24:22Z"
+    lastUpdateTime: "2025-03-03T16:24:22Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2025-03-03T16:06:36Z"
+    lastUpdateTime: "2025-03-03T16:24:22Z"
+    message: ReplicaSet "exoplanets-7d9f7d4b7d" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 4
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
+[student@workstation declarative-manifests]$ oc delete -f .
+configmap "database" deleted
+secret "database" deleted
+deployment.apps "database" deleted
+service "database" deleted
+configmap "exoplanets" deleted
+secret "exoplanets" deleted
+deployment.apps "exoplanets" deleted
+service "exoplanets" deleted
+route.route.openshift.io "exoplanets" deleted
+[student@workstation declarative-manifests]$ lab finish declarative-manifests
+SUCCESS Waiting for cluster
+SUCCESS Remove declarative-manifests project
+SUCCESS Remove lab files
+[student@workstation declarative-manifests]$ 
