@@ -3,7 +3,7 @@ OCP Installation
 
 
 ## Kubernetes & OpenShift Components
-
+===========================================================================================================================================================================
 **KUBE_API**: It manages authentication + authorization, it has by default multiple resources.  
 **OpenShift_API**: New API created, it has different types of resources available, created by API aggregation.  
 **ETCD**: It is a persistent key-value database for Kubernetes.  
@@ -16,14 +16,13 @@ OCP Installation
 **Container Runtime**: Dockerd, containerd - provides an environment to create containers.  
 **PODMAN, DOCKER, CRICTL**: Utilities to interact with the container runtime daemon.  
 **Container Socket**: Communication interface for container management.  
-
+==============================================================================================================================================================================
 
 **Container socket** =commincation interface.
 **dockerd**=/var/run/docker.sock.
 **containerd**=/run/containerd/containerd.sock.
 **cri-o** =/var/run/cri.sock.
-
-
+==============================================================================================================================================================================
 
 ![Image Alt](https://github.com/ubuntomathur/OCP/blob/main/2025-03-17_18-59-42.png)
 
