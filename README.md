@@ -18,11 +18,15 @@ OCP Installation
 **Container Socket**: Communication interface for container management.  
 ==============================================================================================================================================================================
 
-**Container socket** =commincation interface.
+**Container socket**=commincation interface.
 **dockerd**=/var/run/docker.sock.
 **containerd**=/run/containerd/containerd.sock.
 **cri-o** =/var/run/cri.sock.
 ==============================================================================================================================================================================
+**OPENSHIFT INSTALLATION IN BAREMETAL**
+
+
+
 
 ![Image Alt](https://github.com/ubuntomathur/OCP/blob/main/2025-03-17_18-59-42.png)
 
